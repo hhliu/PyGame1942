@@ -31,6 +31,9 @@ movingScale = 600 / fps  # 大約 600 pixels / sec
 # Player，playground為必要參數
 player = Player(playground=playground, sensitivity=movingScale)
 
+keyCountX = 0   # 用來計算按鍵備按下的次數，x軸一組
+keyCountY = 0
+
 running = True
 clock = pygame.time.Clock()  # create an object to help track time
 # 設定無窮迴圈，讓視窗持續更新與執行
@@ -42,19 +45,31 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:  # 'a', 'A', 左移
+                keyCountX += 1
                 player.to_the_left()
             if event.key == pygame.K_d:
+                keyCountX += 1
                 player.to_the_right()
             if event.key == pygame.K_s:
+                keyCountY += 1
                 player.to_the_bottom()
             if event.key == pygame.K_w:
+                keyCountY += 1
                 player.to_the_top()
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_a or event.key == pygame.K_d:
-                player.stop_x()
+                if keyCountX == 1:
+                    keyCountX = 0
+                    player.stop_x()
+                else:
+                    keyCountX -= 1
             if event.key == pygame.K_s or event.key == pygame.K_w:
-                player.stop_y()
+                if keyCountY == 1:
+                    keyCountY = 0
+                    player.stop_y()
+                else:
+                    keyCountY -= 1
 
     screen.blit(background, (0, 0))  # 更新背景圖片
 
