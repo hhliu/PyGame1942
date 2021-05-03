@@ -1,6 +1,6 @@
 """
 使用pygame撰寫一個簡單的射擊遊戲
-不使用pygame.sprite.Sprite，練習物件導向以及事件柱列的撰寫
+不使用pygame.sprite.Sprite，練習物件導向以及事件佇列的撰寫
 """
 
 import pygame
@@ -17,11 +17,11 @@ icon_path = image_path / 'airplaneicon.png'
 
 # 初始化pygame系統
 pygame.init()
-# 建立視窗物件，寬1200、高900
+# 建立視窗物件，寬、高
 screenHigh = 760
 screenWidth = 1000
 playground = [screenWidth, screenHigh]
-fps = 120
+fps = 120   # 更新頻率，包含畫面更新與事件更新
 movingScale = 600 / fps
 screen = pygame.display.set_mode((screenWidth, screenHigh))
 
@@ -31,12 +31,12 @@ icon = pygame.image.load(icon_path)
 pygame.display.set_icon(icon)
 background = pygame.Surface(screen.get_size())
 background = background.convert()  # 為畫布建立副本，加快顯示速度
-background.fill((50, 50, 50))  # 畫布為白色(三個參數為RGB)
+background.fill((50, 50, 50))  # (三個參數為RGB)
 
 # Player
 player = Player((440, 600), playground, movingScale)
 
-# Missiles
+# Missiles and others
 Missiles = []
 Enemies = []
 Boom = []
@@ -50,7 +50,6 @@ dt = 0
 # 建立事件編號
 launchMissile = pygame.USEREVENT + 1
 createEnemy = pygame.USEREVENT + 2
-explosion = pygame.USEREVENT + 3
 
 # 建立敵機，每秒一台
 pygame.time.set_timer(createEnemy, 1000)
@@ -112,23 +111,24 @@ while running:
             if event.key == pygame.K_SPACE:
                 pygame.time.set_timer(launchMissile, 0)  # 停止發射
 
-    screen.blit(background, (0, 0))
+    screen.blit(background, (0, 0))     # 刷新背景
 
+    # 碰撞偵測
     player.collision_detect(Enemies)
     for m in Missiles:
         m.collision_detect(Enemies)
-
+    # 添加爆炸效果
     for e in Enemies:
         if e.collided:
             Boom.append(Explosion(e.center))
-
+    # 移除失效物件
     Boom = [item for item in Boom if item.available]
     Missiles = [item for item in Missiles if item.available]
     Enemies = [item for item in Enemies if item.available]
 
     for m in Missiles:
-        m.update()
-        screen.blit(m.image, m.xy)
+        m.update()      # 觀念：update()會更新物件位置，新的位置在下一次才會被偵測碰撞，因此在碰撞點會出現一次物件圖片
+        screen.blit(m.image, m.xy)      # 將物件圖片貼上視窗
 
     for e in Enemies:
         e.update()

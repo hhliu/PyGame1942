@@ -14,11 +14,9 @@ class Explosion(GameObject):
     def __init__(self, xy=None):
         GameObject.__init__(self)
         if xy is None:
-            self._y = -100
-            self._x = random.randint(10, playground[0] - 100)
+            self._available = False
         else:
-            self._x = xy[0]  # 座標屬性
-            self._y = xy[1]  #
+            self._center = xy  # 座標屬性
 
         if Explosion.explosion_effect:
             pass
@@ -36,6 +34,8 @@ class Explosion(GameObject):
 
         self.__image_index = 0
         self._image = Explosion.explosion_effect[self.__image_index]
+        self._x = self._center[0] - (self._image.get_rect().w / 2)
+        self._y = self._center[1] - (self._image.get_rect().h / 2)
         self.__fps_count = 0
 
     # 解構子，目前沒用
@@ -50,3 +50,5 @@ class Explosion(GameObject):
                 self._available = False
             else:
                 self._image = Explosion.explosion_effect[self.__image_index]
+                self._x = self._center[0] - (self._image.get_rect().w / 2)
+                self._y = self._center[1] - (self._image.get_rect().h / 2)
