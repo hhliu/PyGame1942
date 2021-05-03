@@ -6,6 +6,7 @@ import pygame
 from pathlib import Path
 
 # 初始化pygame系統
+from PyGame1945.code.missile import MyMissile
 from PyGame1945.code.player import Player
 
 pygame.init()
@@ -30,6 +31,9 @@ fps = 120  # 更新頻率，包含畫面更新與事件更新
 movingScale = 600 / fps  # 大約 600 pixels / sec
 # Player，playground為必要參數
 player = Player(playground=playground, sensitivity=movingScale)
+
+# 建立物件串列
+Missiles = []
 
 keyCountX = 0   # 用來計算按鍵備按下的次數，x軸一組
 keyCountY = 0
@@ -57,6 +61,13 @@ while running:
                 keyCountY += 1
                 player.to_the_top()
 
+            if event.key == pygame.K_SPACE:
+                m_x = player.x + 20
+                m_y = player.y
+                Missiles.append(MyMissile(xy=(m_x, m_y), playground=playground, sensitivity=movingScale))
+                m_x = player.x + 80
+                Missiles.append(MyMissile(playground, (m_x, m_y), movingScale))  # 若未指定參數，須按照宣告順序
+
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_a or event.key == pygame.K_d:
                 if keyCountX == 1:
@@ -72,7 +83,10 @@ while running:
                     keyCountY -= 1
 
     screen.blit(background, (0, 0))  # 更新背景圖片
-
+    Missiles = [item for item in Missiles if item.available]
+    for m in Missiles:
+        m.update()
+        screen.blit(m.image, m.xy)
     # 添加player圖片
     player.update()
     screen.blit(player.image, player.xy)
