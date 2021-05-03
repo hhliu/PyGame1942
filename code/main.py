@@ -25,8 +25,8 @@ background = background.convert()  # 改變pixel format，加快顯示速度
 background.fill((50, 50, 50))  # 畫布為鐵黑色(三個參數為RGB)
 
 running = True
-fps = 120   # 更新頻率，包含畫面更新與事件更新
-clock = pygame.time.Clock()   # create an object to help track time
+fps = 120  # 更新頻率，包含畫面更新與事件更新
+clock = pygame.time.Clock()  # create an object to help track time
 # 設定無窮迴圈，讓視窗持續更新與執行
 while running:
     # 從pygame事件佇列中，一項一項的檢查
@@ -34,7 +34,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen.blit(background, (0, 0)) # 更新背景圖片
-    pygame.display.update() # 更新螢幕狀態
-    dt = clock.tick(fps) # 每秒更新fps次
+    screen.blit(background, (0, 0))  # 更新背景圖片
+    pygame.display.update()  # 更新螢幕狀態
+    dt = clock.tick(fps)  # 每秒更新fps次，This method should be called once per frame.
 pygame.quit()  # 關閉繪圖視窗
