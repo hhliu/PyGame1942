@@ -3,6 +3,8 @@
 不使用pygame.sprite.Sprite，練習物件導向以及事件導向的撰寫
 """
 import pygame
+from pathlib import Path
+
 # 初始化pygame系統
 pygame.init()
 # 建立視窗物件，寬、高
@@ -10,6 +12,17 @@ screenHigh = 760
 screenWidth = 1000
 playground = [screenWidth, screenHigh]
 screen = pygame.display.set_mode((screenWidth, screenHigh))
+
+parent_path = Path(__file__).parents[1]
+image_path = parent_path / 'res'
+icon_path = image_path / 'airplaneicon.png'
+# Title, Icon, and Background
+pygame.display.set_caption("1942偽")
+icon = pygame.image.load(icon_path)  # 載入圖示
+pygame.display.set_icon(icon)
+background = pygame.Surface(screen.get_size())
+background = background.convert()  # 改變pixel format，加快顯示速度
+background.fill((50, 50, 50))  # 畫布為鐵黑色(三個參數為RGB)
 
 running = True
 fps = 120   # 更新頻率，包含畫面更新與事件更新
@@ -21,6 +34,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    screen.blit(background, (0, 0)) # 更新背景圖片
     pygame.display.update() # 更新螢幕狀態
     dt = clock.tick(fps) # 每秒更新fps次
 pygame.quit()  # 關閉繪圖視窗
