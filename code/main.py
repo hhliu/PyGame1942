@@ -4,12 +4,12 @@
 """
 import pygame
 from pathlib import Path
-
-# 初始化pygame系統
+from explosion import Explosion
 from enemy import Enemy
 from missile import MyMissile
 from player import Player
 
+# 初始化pygame系統
 pygame.init()
 # 建立視窗物件，寬、高
 screenHigh = 760
@@ -36,6 +36,7 @@ player = Player(playground=playground, sensitivity=movingScale)
 # 建立物件串列
 Missiles = []
 Enemies = []
+Boom = []
 
 keyCountX = 0   # 用來計算按鍵備按下的次數，x軸一組
 keyCountY = 0
@@ -43,6 +44,7 @@ keyCountY = 0
 # 建立事件編號
 launchMissile = pygame.USEREVENT + 1
 createEnemy = pygame.USEREVENT + 2
+explosion = pygame.USEREVENT + 3
 
 # 建立敵機，每秒一台
 pygame.time.set_timer(createEnemy, 1000)
@@ -107,6 +109,12 @@ while running:
                 pygame.time.set_timer(launchMissile, 0)  # 停止發射
 
     screen.blit(background, (0, 0))  # 更新背景圖片
+
+    player.collision_detect(Enemies)
+    for e in Enemies:
+        if e.collided:
+            Boom.append(Explosion(e.center))
+
     Missiles = [item for item in Missiles if item.available]
     for m in Missiles:
         m.update()
@@ -116,9 +124,16 @@ while running:
     for e in Enemies:
         e.update()
         screen.blit(e.image, e.xy)
+
     # 添加player圖片
     player.update()
     screen.blit(player.image, player.xy)
+    # 爆炸效果在player之上
+    Boom = [item for item in Boom if item.available]
+    for e in Boom:
+        e.update()
+        screen.blit(e.image, e.xy)
+
     pygame.display.update()  # 更新螢幕狀態
     dt = clock.tick(fps)  # 每秒更新fps次，This method should be called once per frame.
 pygame.quit()  # 關閉繪圖視窗

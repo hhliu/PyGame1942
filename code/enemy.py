@@ -1,7 +1,5 @@
 from pathlib import Path
 import random
-from typing import Any, Tuple, Union
-
 import pygame
 import math
 from gobject import GameObject
