@@ -35,15 +35,15 @@ class GameObject:
     @xy.setter
     def xy(self, xy):
         try:
-            self.x, self.y = xy
-            if self.x > self._objectBound[1]:
-                self.x = self._objectBound[1]
-            if self.x < self._objectBound[0]:
-                self.x = self._objectBound[0]
-            if self.y > self._objectBound[3]:
-                self.y = self._objectBound[3]
-            if self.y < self._objectBound[2]:
-                self.y = self._objectBound[2]
+            self._x, self._y = xy
+            if self._x > self._objectBound[1]:
+                self._x = self._objectBound[1]
+            if self._x < self._objectBound[0]:
+                self._x = self._objectBound[0]
+            if self._y > self._objectBound[3]:
+                self._y = self._objectBound[3]
+            if self._y < self._objectBound[2]:
+                self._y = self._objectBound[2]
         except ValueError:
             raise ValueError("Pass an iterable with two items")
         else:
@@ -95,16 +95,16 @@ class GameObject:
         self._changeY = 0
 
     def update(self):
-        self.x += self._changeX
-        self.y += self._changeY
-        if self.x > self._objectBound[1]:
-            self.x = self._objectBound[1]
-        if self.x < self._objectBound[0]:
-            self.x = self._objectBound[0]
-        if self.y > self._objectBound[3]:
-            self.y = self._objectBound[3]
-        if self.y < self._objectBound[2]:
-            self.y = self._objectBound[2]
+        self._x += self._changeX
+        self._y += self._changeY
+        if self._x > self._objectBound[1]:
+            self._x = self._objectBound[1]
+        if self._x < self._objectBound[0]:
+            self._x = self._objectBound[0]
+        if self._y > self._objectBound[3]:
+            self._y = self._objectBound[3]
+        if self._y < self._objectBound[2]:
+            self._y = self._objectBound[2]
 
     @property
     def image(self):

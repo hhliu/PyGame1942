@@ -6,8 +6,9 @@ import pygame
 from pathlib import Path
 
 # 初始化pygame系統
-from code.missile import MyMissile
-from code.player import Player
+from enemy import Enemy
+from missile import MyMissile
+from player import Player
 
 pygame.init()
 # 建立視窗物件，寬、高
@@ -34,12 +35,17 @@ player = Player(playground=playground, sensitivity=movingScale)
 
 # 建立物件串列
 Missiles = []
+Enemies = []
 
 keyCountX = 0   # 用來計算按鍵備按下的次數，x軸一組
 keyCountY = 0
 
 # 建立事件編號
 launchMissile = pygame.USEREVENT + 1
+createEnemy = pygame.USEREVENT + 2
+
+# 建立敵機，每秒一台
+pygame.time.set_timer(createEnemy, 1000)
 
 running = True
 clock = pygame.time.Clock()  # create an object to help track time
@@ -57,6 +63,9 @@ while running:
             Missiles.append(MyMissile(xy=(m_x, m_y), playground=playground, sensitivity=movingScale))
             m_x = player.xy[0] + 80
             Missiles.append(MyMissile(xy=(m_x, m_y), playground=playground, sensitivity=movingScale))
+
+        if event.type == createEnemy:
+            Enemies.append(Enemy(playground=playground, sensitivity=movingScale))
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:  # 'a', 'A', 左移
@@ -102,6 +111,11 @@ while running:
     for m in Missiles:
         m.update()
         screen.blit(m.image, m.xy)
+
+    Enemies = [item for item in Enemies if item.available]
+    for e in Enemies:
+        e.update()
+        screen.blit(e.image, e.xy)
     # 添加player圖片
     player.update()
     screen.blit(player.image, player.xy)
